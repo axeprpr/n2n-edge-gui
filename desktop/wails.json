@@ -1,0 +1,15 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "n2nGUI",
+  "outputfilename": "n2nGUI",
+  "frontend:install": "echo static frontend",
+  "frontend:build": "echo static frontend",
+  "frontend:dev:watcher": "echo static frontend",
+  "frontend:dev:serverUrl": "",
+  "author": {
+    "name": "n2nGUI",
+    "email": ""
+  },
+  "assetdir": "frontend",
+  "wailsjsdir": "frontend/wailsjs"
+}

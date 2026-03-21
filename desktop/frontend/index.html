@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>n2nGUI 2.0</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">n2n</div>
+          <div>
+            <p class="eyebrow">Desktop Control Plane</p>
+            <h1>n2nGUI 2.0</h1>
+          </div>
+        </div>
+        <p class="sidebar-copy">
+          A cleaner control surface for edge configuration, runtime state, and
+          diagnostics.
+        </p>
+        <div class="status-pill" id="status-pill">Checking runtime</div>
+        <div class="sidebar-footer">
+          <div>
+            <span>Server</span>
+            <strong id="server-address">127.0.0.1:8787</strong>
+          </div>
+          <div>
+            <span>Platform</span>
+            <strong id="platform-label">Unknown</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="hero card">
+          <div>
+            <p class="eyebrow">Runtime</p>
+            <h2>Operate your edge node without the tray-era friction.</h2>
+            <p class="hero-copy">
+              Save a typed configuration, inspect process state, and keep live
+              logs visible while you tune supernode settings.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button class="primary" id="save-button">Save Config</button>
+            <button class="secondary" id="start-button">Start Edge</button>
+            <button class="ghost" id="stop-button">Stop Edge</button>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card metric-card">
+            <p class="eyebrow">Process State</p>
+            <div class="metric" id="metric-running">Stopped</div>
+            <p class="supporting" id="metric-running-copy">
+              Waiting for status from the local manager.
+            </p>
+          </article>
+
+          <article class="card metric-card">
+            <p class="eyebrow">Supernode</p>
+            <div class="metric mono" id="metric-supernode">-</div>
+            <p class="supporting">Current target host and port.</p>
+          </article>
+
+          <article class="card metric-card">
+            <p class="eyebrow">Last Error</p>
+            <div class="metric error-text" id="metric-error">None</div>
+            <p class="supporting">Most recent runtime or validation failure.</p>
+          </article>
+        </section>
+
+        <section class="grid two-column">
+          <article class="card panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Configuration</p>
+                <h3>Node Profile</h3>
+              </div>
+              <span class="chip">Typed Model</span>
+            </div>
+
+            <form id="config-form" class="config-form">
+              <label>
+                <span>Community</span>
+                <input type="text" name="community" placeholder="community name" />
+              </label>
+
+              <label>
+                <span>Address Mode</span>
+                <select name="addressMode">
+                  <option value="dhcp">DHCP</option>
+                  <option value="static">Static IP</option>
+                </select>
+              </label>
+
+              <label id="address-row">
+                <span>Static Address</span>
+                <input type="text" name="address" placeholder="10.10.10.8" />
+              </label>
+
+              <label>
+                <span>Supernode Host</span>
+                <input type="text" name="supernodeHost" placeholder="supernode.example.com" />
+              </label>
+
+              <label>
+                <span>Supernode Port</span>
+                <input type="number" name="supernodePort" min="1" max="65535" />
+              </label>
+
+              <label>
+                <span>MTU</span>
+                <input type="number" name="mtu" min="500" max="9000" />
+              </label>
+
+              <label class="full">
+                <span>Extra Args</span>
+                <input type="text" name="extraArgs" placeholder="-f -v" />
+              </label>
+            </form>
+          </article>
+
+          <article class="card panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Diagnostics</p>
+                <h3>Environment</h3>
+              </div>
+              <span class="chip">Live</span>
+            </div>
+
+            <dl class="diagnostics" id="diagnostics"></dl>
+          </article>
+        </section>
+
+        <section class="card panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Runtime Logs</p>
+              <h3>Process Output</h3>
+            </div>
+            <span class="chip">Buffered</span>
+          </div>
+          <pre class="log-view" id="log-view">Waiting for logs…</pre>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js" defer></script>
+  </body>
+  </html>
