@@ -31,12 +31,15 @@ jobs:
       - name: Build Windows exe and installer
         env:
           NSISDIR: 'C:\Program Files (x86)\NSIS'
+          GITHUB_WORKSPACE: '${{ github.workspace }}'
         run: |
           $ErrorActionPreference = 'Continue'
+          $ws = "$env:GITHUB_WORKSPACE"
+          Write-Host "Workspace: $ws"
           cd desktop
           wails build -platform windows/amd64 -o n2nGUI.exe
-          $scriptPath = "$PWD\build\windows\installer\project.nsi"
-          Write-Host "Script path: $scriptPath"
+          $scriptPath = Join-Path $ws "desktop\build\windows\installer\project.nsi"
+          Write-Host "Full script path: $scriptPath"
           & "$env:NSISDIR\makensis.exe" $scriptPath 2>&1 | ForEach-Object { Write-Host $_ }
 
       - name: Upload Windows assets
