@@ -35,7 +35,7 @@ jobs:
 
       - name: List build outputs
         run: |
-          ls -la desktop/build/bin/
+          dir desktop\\build\\bin\\
 
       - name: Upload Windows assets
         uses: softprops/action-gh-release@v2
