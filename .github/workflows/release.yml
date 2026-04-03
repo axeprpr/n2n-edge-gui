@@ -29,14 +29,15 @@ jobs:
         run: choco install nsis -y
 
       - name: Build Windows exe and installer
-        working-directory: desktop
         env:
           NSISDIR: 'C:\Program Files (x86)\NSIS'
         run: |
           $ErrorActionPreference = 'Continue'
+          cd desktop
           wails build -platform windows/amd64 -o n2nGUI.exe
-          $script = Join-Path $PWD "build\windows\installer\project.nsi"
-          & "$env:NSISDIR\makensis.exe" $script 2>&1 | ForEach-Object { Write-Host $_ }
+          $scriptPath = "$PWD\build\windows\installer\project.nsi"
+          Write-Host "Script path: $scriptPath"
+          & "$env:NSISDIR\makensis.exe" $scriptPath 2>&1 | ForEach-Object { Write-Host $_ }
 
       - name: Upload Windows assets
         uses: softprops/action-gh-release@v2
