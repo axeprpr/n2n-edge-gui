@@ -36,8 +36,14 @@ jobs:
       - name: Install Linux build dependencies
         if: matrix.platform == 'linux/amd64'
         run: |
-          apt-get update -qq
-          apt-get install -y -qq libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev > /dev/null 2>&1
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libgl1-mesa-dev
+        timeout-minutes: 10
 
       - name: Build ${{ matrix.platform }}
         working-directory: desktop
