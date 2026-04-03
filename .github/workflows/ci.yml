@@ -12,25 +12,28 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
-          
+          go-version: '1.23'
+
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-          
+
       - name: Build Linux
         run: |
-          CGO_ENABLED=1 go build -ldflags="-s -w" -o n2nGUI ./cmd/n2nGUI
-          
-      - name: Build Windows (test)
-        run: |
-          wails build -platform windows/amd64 -o n2nGUI.exe -nopackage
+          wails build -platform linux/amd64 -o n2nGUI-test
         working-directory: desktop
         env:
           GOPATH: /root/go
-          
+
+      - name: Build Windows (test only, no package)
+        run: |
+          wails build -platform windows/amd64 -o n2nGUI-test.exe -nopackage
+        working-directory: desktop
+        env:
+          GOPATH: /root/go
+
       - name: Run tests
         run: go test ./...

@@ -10,36 +10,46 @@ permissions:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            ext: ''
+            output: n2nGUI-linux-x64
+          - platform: linux/arm64
+            arch: arm64
+            ext: ''
+            output: n2nGUI-linux-arm64
+          - platform: windows/amd64
+            arch: amd64
+            ext: .exe
+            output: n2nGUI-windows-x64
+
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
-          
+          go-version: '1.23'
+
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-        
-      - name: Build with Wails
+
+      - name: Build ${{ matrix.platform }}
         run: |
-          wails build -platform windows/amd64 -o n2nGUI.exe
+          wails build -platform ${{ matrix.platform }} -o ${{ matrix.output }}${{ matrix.ext }}
         working-directory: desktop
         env:
           GOPATH: /root/go
-          
-      - name: Build Linux binary
-        run: |
-          CGO_ENABLED=1 go build -ldflags="-s -w" -o n2nGUI ./cmd/n2nGUI
-          
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
+
+      - name: Upload ${{ matrix.platform }} asset
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            desktop/n2nGUI.exe
-            n2nGUI
-          generate_release_notes: true
+          files: desktop/${{ matrix.output }}${{ matrix.ext }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
