@@ -34,8 +34,9 @@ jobs:
         run: |
           $ErrorActionPreference = 'Continue'
           $ws = "${{ github.workspace }}"
-          $ws = $ws.Replace('\n', '\')
-          Write-Host "Workspace: $ws"
+          $ws = $ws -replace "[`r`n]", ""
+          $ws = $ws -replace "\\n", ""
+          Write-Host "Workspace after cleanup: $ws"
           cd desktop
           wails build -platform windows/amd64 -o n2nGUI.exe
           $scriptPath = Join-Path $ws "desktop\build\windows\installer\project.nsi"
