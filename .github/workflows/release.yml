@@ -32,8 +32,7 @@ jobs:
         env:
           NSISDIR: 'C:\Program Files (x86)\NSIS'
         run: |
-          $ws = "${{ github.workspace }}"
-          $clean = $ws -replace '\\n', '\' -replace "`n", '' -replace "`r", ''
+          $env:Path += ";C:\Program Files (x86)\NSIS"
           Set-Location desktop
           wails build -platform windows/amd64 -nsis -o n2nGUI.exe
 
