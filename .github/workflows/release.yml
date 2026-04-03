@@ -34,15 +34,18 @@ jobs:
         run: |
           $ErrorActionPreference = 'Continue'
           $ws = "${{ github.workspace }}"
-          # The workspace path may contain literal \n as two chars - replace with backslash
-          $clean = $ws -replace '\\n', '\'
-          # Also remove any actual newline bytes
-          $clean = $clean -replace "`n", '' -replace "`r", ''
+          $clean = $ws -replace '\\n', '\' -replace "`n", '' -replace "`r", ''
           Write-Host "Workspace: $clean"
           Set-Location desktop
           wails build -platform windows/amd64 -o n2nGUI.exe
           $scriptPath = Join-Path $clean "desktop\build\windows\installer\project.nsi"
           Write-Host "Script path: $scriptPath"
+          Write-Host "Script exists: $(Test-Path $scriptPath)"
+          # If script not found, search for it
+          if (-not (Test-Path $scriptPath)) {
+            Write-Host "Searching for project.nsi..."
+            Get-ChildItem -Path $clean -Recurse -Filter "*.nsi" | ForEach-Object { Write-Host "Found: $($_.FullName)" }
+          }
           & "$env:NSISDIR\makensis.exe" $scriptPath 2>&1 | ForEach-Object { Write-Host $_ }
 
       - name: Upload Windows assets
